@@ -1,76 +1,143 @@
-interface MyBuilder {
-    myProducePartA(): void;
-    myProducePartB(): void;
-    myProducePartC(): void;
+interface IStructureBuilder {
+    createFoundation(): void;
+    createFacade(): void;
+    createRoof(): void;
+    createFloor(): void;
+    createStairs(): void;
 }
 
-class MyConcreteBuilder1 implements MyBuilder {
-    private product: MyProduct1;
+class HouseBuilder implements IStructureBuilder {
+    product: Structure
 
     constructor() {
         this.reset()
     }
 
-    public reset(): void {
-        this.product = new MyProduct1()
+    reset(): void {
+        this.product = new Structure()
     }
 
-
-    myProducePartA(): void {
-        this.product.parts.push('PartA')
-    }
-    myProducePartB(): void {
-        this.product.parts.push('PartB')
-    }
-    myProducePartC(): void {
-        this.product.parts.push('PartC')
+    createFoundation(): void {
+        this.product.structureParts.push('house_foundation')
     }
 
-    getProduct(): MyProduct1 {
+    createFacade(): void {
+        this.product.structureParts.push('house_facade')
+    }
+
+    createFloor(): void {
+        this.product.structureParts.push('house_floor')
+    }
+
+    createRoof(): void {
+        this.product.structureParts.push('house_roof')
+    }
+
+    createStairs(): void {
+        this.product.structureParts.push('house_stairs')
+    }
+
+    getStructure(): Structure {
         const result = this.product
         this.reset()
-        return result
+        return result;
     }
 }
 
-class MyProduct1 {
-    public parts: string[] = []
+class GarageBuilder implements IStructureBuilder {
+    product: Structure
 
-    public listParts(): void {
-        console.log(`Product parts: ${this.parts.join(', ')}\n`);
+    constructor() {
+        this.reset()
+    }
+
+    reset(): void {
+        this.product = new Structure()
+    }
+
+    createFoundation(): void {
+        this.product.structureParts.push('garage_foundation')
+    }
+    createFacade(): void {
+        this.product.structureParts.push('garage_facade')
+    }
+    createRoof(): void {
+        this.product.structureParts.push('garage_roof')
+    }
+    createFloor(): void {
+        this.product.structureParts.push('garage_floor')
+    }
+    createStairs(): void {
+        this.product.structureParts.push('garage_stairs')
+    }
+
+    getStructure(): Structure {
+        const result = this.product
+        this.reset()
+        return result;
     }
 }
 
-class MyDirector {
-    private builder: MyBuilder
+class Structure {
+    structureParts: string[] = []
+    showParts(): void {
+        console.log(this.structureParts.join(', '))
+    }
+}
 
-    setBuilder(builder: MyBuilder): void {
+class BuilderDirector {
+    private builder: IStructureBuilder
+
+    setStructureBuilder(builder: IStructureBuilder): void {
         this.builder = builder
     }
 
-    public buildMVP(): void {
-        this.builder.myProducePartA()
+    createSmallStructure() {
+        this.builder.createFoundation()
+        this.builder.createFloor()
+        this.builder.createRoof()
     }
 
-    public buildFull(): void {
-        this.builder.myProducePartA()
-        this.builder.myProducePartB()
-        this.builder.myProducePartC()
+    createBigStructure() {
+        this.builder.createFoundation()
+        this.builder.createFloor()
+        this.builder.createFloor()
+        this.builder.createFloor()
+        this.builder.createFloor()
+        this.builder.createFloor()
+        this.builder.createStairs()
+        this.builder.createStairs()
+        this.builder.createStairs()
+        this.builder.createStairs()
+        this.builder.createStairs()
+        this.builder.createFacade()
+        this.builder.createRoof()
     }
 }
 
-function clientCode(director: MyDirector) {
-    const builder = new MyConcreteBuilder1()
-    director.setBuilder(builder)
+function clientCodeForBuilder(director: BuilderDirector) {
+    const houseBuilder = new HouseBuilder()
+    director.setStructureBuilder(houseBuilder)
 
-    console.log('basic product')
-    director.buildMVP()
-    builder.getProduct().listParts();
+    console.log(`big houses`)
+    director.createBigStructure()
+    houseBuilder.getStructure().showParts()
 
-    console.log('full product')
-    director.buildFull()
-    builder.getProduct().listParts()
+    console.log(`small houses`)
+    director.createSmallStructure()
+    houseBuilder.getStructure().showParts()
+
+    const garageBuilder = new GarageBuilder()
+    director.setStructureBuilder(garageBuilder)
+
+    console.log(`big garage`)
+    director.createBigStructure()
+    garageBuilder.getStructure().showParts()
+
+    console.log(`small garage`)
+    director.createSmallStructure()
+    garageBuilder.getStructure().showParts()
 }
 
-const myDirector = new MyDirector()
-clientCode(myDirector)
+const builderDirector = new BuilderDirector()
+console.log(clientCodeForBuilder(builderDirector))

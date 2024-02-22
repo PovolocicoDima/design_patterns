@@ -1,69 +1,49 @@
-abstract class MainCreator {
-  /**
-   * фабричный метод, который в каждом конкретном создателе
-   * возвращает конкретный продукт, но тип у продукта должен
-   * соответствовать основному интерфейсу, в данном случа Product
-   */
-  abstract factoryMethod(): Product
-
-  /**
-   * стандартная логика по работе с продуктами
-   * продукт получают вызывая также фабричный метод, а не через new
-   */
-  public someLogic(): string {
+abstract class ProductCreator {
+  abstract factoryMethod(): IDataProduct
+  public businessLogic(): string {
     const product = this.factoryMethod()
-    return product.operation()
+    return `This is the result of product business logic:  ${product.productOperation()}`
   }
 }
 
-/**
- * Основной интерфейс, с которым взаимодействуют фабрики
- * они именно его и должны возвращать
- */
-interface Product {
-  operation(): string
+interface IDataProduct {
+  productOperation(): string
 }
 
-/**
- * конкретный создатель, который наследуется от основного создателя
- * и переписывает фабричный метод, создавая конкретный продукт 
- * используя new, но интерфейс совпадает с основным
- */
-class Concrete1Creator extends MainCreator {
-  public factoryMethod(): Product {
-    return new Concrete1Product()
+class FuturesDataProduct implements IDataProduct {
+  productOperation(): string {
+      return `This is FuturesDataProduct result`
   }
 }
 
-/**
- * конкретный создатель, который наследуется от основного создателя
- * и переписывает фабричный метод, создавая конкретный продукт 
- * используя new, но интерфейс совпадает с основным
- */
-class Concrete2Creator extends MainCreator {
-  public factoryMethod(): Product {
-    return new Concrete2Product()
+class SpotDataProduct implements IDataProduct {
+  productOperation(): string {
+      return `This is SpotDataProduct result`
   }
 }
 
-/**
- * конкретный продукт, который создает конкретный создатель
- * у данном продукта есть своя имплементация метода, описанного в 
- * интерфейсе
- */
-class Concrete1Product implements Product {
-  operation(): string {
-      return `Concrete1 implementation of operation` 
+class FuturesDataCreator extends ProductCreator {
+  factoryMethod(): IDataProduct {
+      return new FuturesDataProduct()
   }
 }
 
-/**
- * конкретный продукт, который создает конкретный создатель
- * у данном продукта есть своя имплементация метода, описанного в 
- * интерфейсе
- */
-class Concrete2Product implements Product {
-  operation(): string {
-      return `Concrete2 implementation of operation` 
+class SpotDataProductCreator extends ProductCreator {
+  factoryMethod(): IDataProduct {
+      return new SpotDataProduct()
   }
 }
+
+function clientCode(creator: ProductCreator) {
+  return creator.businessLogic()
+}
+
+
+const creator1 = new FuturesDataCreator()
+const creator2 = new SpotDataProductCreator()
+
+console.log(`App launched with first`)
+console.log(clientCode(creator1))
+console.log(`App launched with second`)
+console.log(clientCode(creator2))
+

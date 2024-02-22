@@ -25,11 +25,11 @@ class Singleton {
      * только один экземпляр каждого подкласса.
      */
     public static getInstance(): Singleton {
-        if (!Singleton.instance) {
-            Singleton.instance = new Singleton();
+        if (!this.instance) {
+            this.instance = new Singleton();
         }
 
-        return Singleton.instance;
+        return this.instance;
     }
 
     /**

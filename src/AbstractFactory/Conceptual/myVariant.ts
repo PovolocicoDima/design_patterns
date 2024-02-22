@@ -1,68 +1,67 @@
-interface MyAbstractFactory {
-    createProductX(): abstractProductX
-    createProductY(): abstractProductY
+interface IAbstractBuilder {
+    createHouse(): IHouse;
+    createGarage(): IGarage;
 }
 
-class ConcreteFactory3 implements MyAbstractFactory {
-    createProductX(): abstractProductX {
-        return new ConcreteProductX3()
+class TownBuilder implements IAbstractBuilder {
+    createHouse(): IHouse {
+        return new BigHouse()
     }
-
-    createProductY(): abstractProductY {
-        return new ConcreteProductY3()
-    }
-}
-
-class ConcreteFactory4 implements MyAbstractFactory {
-    createProductX(): abstractProductX {
-        return new ConcreteProductX4()
-    }
-
-    createProductY(): abstractProductY {
-        return new ConcreteProductY4()
+    createGarage(): IGarage {
+        return new BigGarage()
     }
 }
 
-interface abstractProductX {
-    usefulFunctionX(): string
-}
-
-interface abstractProductY {
-    usefulFunctionY(): number
-}
-
-class ConcreteProductX3 implements abstractProductX {
-    public usefulFunctionX(): string {
-        return `useful function from concrete product 3`
+class WillageBuilder implements IAbstractBuilder {
+    createHouse(): IHouse {
+        return new SmallHouse()
+    }
+    createGarage(): IGarage {
+        return new SmallGarage()
     }
 }
 
-class ConcreteProductY3 implements abstractProductY {
-    public usefulFunctionY(): number {
-        return 3
+interface IHouse {
+    isHouse(): string
+}
+
+interface IGarage {
+    isGarage(): string
+}
+
+class BigHouse implements IHouse {
+    isHouse(): string {
+        return `This is big house`
     }
 }
 
-class ConcreteProductX4 implements abstractProductX {
-    public usefulFunctionX(): string {
-        return `useful function from concrete product 4`
+class SmallHouse implements IHouse {
+    isHouse(): string {
+        return `This is small house`
     }
 }
 
-class ConcreteProductY4 implements abstractProductY {
-    public usefulFunctionY(): number {
-        return 4
+class BigGarage implements IGarage {
+    isGarage(): string {
+        return `This is big garage`
     }
 }
 
-function clientCode1(factory: MyAbstractFactory) {
-    const productX = factory.createProductX()
-    const productY = factory.createProductY()
-
-    console.log(productX.usefulFunctionX())
-    console.log(productY.usefulFunctionY())
+class SmallGarage implements IGarage {
+    isGarage(): string {
+        return `This is small garage`
+    }
 }
 
-clientCode1(new ConcreteFactory3())
-console.log('``````````````')
-clientCode1(new ConcreteFactory4())
+function letsBuild(factory: IAbstractBuilder) {
+    const house = factory.createHouse()
+    const garage = factory.createGarage()
+
+    console.log(`${house.isHouse()}`)
+    console.log(`${garage.isGarage()}`)
+}
+
+console.log('App1')
+letsBuild(new TownBuilder())
+console.log('App2')
+letsBuild(new WillageBuilder())
