@@ -1,41 +1,42 @@
-class MyTarget1 {
-    public request(): string {
-        return `Target: The default target\'s behavior.`
+class InnerService {
+    public calculate(): string {
+        return `This is default calculation`
     }
 }
 
-class MyAdaptee {
-    public specificRequest(): string {
+class NeedToBeAdapted {
+    specificCalculation(): string {
         return `.eetpadA eht fo roivaheb laicepS`
     }
 }
 
-class MyAdapter extends MyTarget1 {
-    private myAdaptee: MyAdaptee
+class InnerServiceAdapter extends InnerService {
+    service: NeedToBeAdapted
 
-    constructor(myAdaptee: MyAdaptee) {
+    constructor(needToBeAdapted: NeedToBeAdapted) {
         super()
-        this.myAdaptee = myAdaptee
+        this.service = needToBeAdapted
     }
 
-    public request(): string {
-        const result = this.myAdaptee.specificRequest().split('').reverse().join('')
-        return `Adapter: (TRANSLATED) ${result}`
+    public calculate(): string {
+        return this.service.specificCalculation().split('').reverse().join('')
     }
 }
 
-function adapterClientCode(target: MyTarget1) {
-    console.log(target.request())
+
+function clienCodeForMyAdapter(code: InnerService) {
+    console.log(code.calculate())
 }
 
-console.log(`I'm target and I can work with standart request`);
-const target1 = new MyTarget1()
-adapterClientCode(target1)
+console.log(`default behavior`)
+const innerService = new InnerService()
 
-console.log(`But I cant work with unstandart reques`)
-const adaptee12 = new MyAdaptee()
-console.log('Client: The Adaptee class has a weird interface. See, I don\'t understand it:');
-console.log(`Adaptee: ${adaptee12.specificRequest()}`);
+clienCodeForMyAdapter(innerService)
 
-const adapter123 = new MyAdapter(adaptee12)
-clientCode(adapter123)
+
+console.log(`adaptive behavior`)
+
+const thisIsMyService = new NeedToBeAdapted() 
+
+const myInnerServiceAdapter = new InnerServiceAdapter(thisIsMyService)
+clienCodeForMyAdapter(myInnerServiceAdapter)

@@ -45,13 +45,13 @@ class Adapter extends Target {
 /**
  * Клиентский код поддерживает все классы, использующие целевой интерфейс.
  */
-function clientCode(target: Target) {
+function clientCodeForAdapter(target: Target) {
     console.log(target.request());
 }
 
 console.log('Client: I can work just fine with the Target objects:');
 const target = new Target();
-clientCode(target);
+clientCodeForAdapter(target);
 
 console.log('');
 
@@ -63,4 +63,4 @@ console.log('');
 
 console.log('Client: But I can work with it via the Adapter:');
 const adapter = new Adapter(adaptee);
-clientCode(adapter);
+clientCodeForAdapter(adapter);
