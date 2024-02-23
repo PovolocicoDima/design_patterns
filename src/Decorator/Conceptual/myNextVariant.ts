@@ -1,41 +1,49 @@
-interface MyComponent1 {
-    operation(): string
+interface IBaseHouseInterface {
+    build(): string
 }
 
-class MyConcreteComponent1 implements MyComponent1 {
-    public operation(): string {
-        return `MyConcreteComponent1`
+class BaseHouse implements IBaseHouseInterface {
+    build(): string {
+        return `BaseHouse`
     }
 }
 
-class MyDecorator1 implements MyComponent1 {
-    protected component: MyComponent1
-    constructor(component: MyComponent1) {
-        this.component = component
+class BaseHouseDecorator implements IBaseHouseInterface {
+    private base: IBaseHouseInterface 
+
+    constructor(base: IBaseHouseInterface) {
+        this.base = base
     }
 
-    public operation(): string {
-        return this.component.operation()
-    }
-}
-
-class MyConcreteDecorator1 extends MyDecorator1 {
-    public operation(): string {
-        return `MyConcreteDecorator1: ${super.operation()}`
+    build(): string {
+        return this.base.build()
     }
 }
 
-class MyConcreteDecorator2 extends MyDecorator1 {
-    public operation(): string {
-        return `MyConcreteDecorator2: ${super.operation()}`
+class SmallHousesDecorator extends BaseHouseDecorator {
+    build(): string {
+        return `Small house with ${super.build()}`
     }
 }
 
-function clientCode12(component: MyComponent1) {
-    console.log(component.operation())
+class BigHousesDecorator extends BaseHouseDecorator {
+    build(): string {
+        return `Big houses with ${super.build()}`
+    }
 }
 
-const test1 = new MyConcreteComponent1()
-const test2 = new MyConcreteDecorator1(test1)
-const test3 = new MyConcreteDecorator2(test2)
-clientCode12(test3)
+
+const createMyAHouse = (builder: IBaseHouseInterface) => {
+    console.log(builder.build())
+}
+
+console.log(`app by default`)
+const baseHouse = new BaseHouse()
+createMyAHouse(baseHouse)
+
+console.log(`app with dec 1`)
+const small = new SmallHousesDecorator(baseHouse)
+createMyAHouse(small)
+console.log(`app with dec 2`)
+const big = new BigHousesDecorator(baseHouse)
+createMyAHouse(big)
