@@ -24,7 +24,7 @@ class SimpleCommand implements Command {
     }
 
     public execute(): void {
-        console.log(`SimpleCommand: See, I can do simple things like printing (${this.payload})`);
+        console.log(`SimpleCommand: See, I can do simple things like print (${this.payload})`);
     }
 }
 
@@ -115,7 +115,7 @@ class Invoker {
         }
     }
 
-    private isCommand(object): object is Command {
+    private isCommand(object: Command): object is Command {
         return object.execute !== undefined;
     }
 }
