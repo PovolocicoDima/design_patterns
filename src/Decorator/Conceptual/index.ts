@@ -9,7 +9,7 @@
  * Базовый интерфейс Компонента определяет поведение, которое изменяется
  * декораторами.
  */
-interface Component {
+interface IBaseInterface {
     operation(): string;
 }
 
@@ -17,7 +17,7 @@ interface Component {
  * Конкретные Компоненты предоставляют реализации поведения по умолчанию. Может
  * быть несколько вариаций этих классов.
  */
-class ConcreteComponent implements Component {
+class ComponentWithDefaultOperation implements IBaseInterface {
     public operation(): string {
         return 'ConcreteComponent';
     }
@@ -29,10 +29,10 @@ class ConcreteComponent implements Component {
  * декораторов. Реализация кода обёртки по умолчанию может включать в себя поле
  * для хранения завёрнутого компонента и средства его инициализации.
  */
-class Decorator implements Component {
-    protected component: Component;
+class DecoratorClass implements IBaseInterface {
+    protected component: IBaseInterface;
 
-    constructor(component: Component) {
+    constructor(component: IBaseInterface) {
         this.component = component;
     }
 
@@ -48,7 +48,7 @@ class Decorator implements Component {
  * Конкретные Декораторы вызывают обёрнутый объект и изменяют его результат
  * некоторым образом.
  */
-class ConcreteDecoratorA extends Decorator {
+class DecoratorFirst extends DecoratorClass {
     /**
      * Декораторы могут вызывать родительскую реализацию операции, вместо того,
      * чтобы вызвать обёрнутый объект напрямую. Такой подход упрощает расширение
@@ -63,7 +63,7 @@ class ConcreteDecoratorA extends Decorator {
  * Декораторы могут выполнять своё поведение до или после вызова обёрнутого
  * объекта.
  */
-class ConcreteDecoratorB extends Decorator {
+class DecoratorSecond extends DecoratorClass {
     public operation(): string {
         return `ConcreteDecoratorB(${super.operation()})`;
     }
@@ -74,7 +74,7 @@ class ConcreteDecoratorB extends Decorator {
  * Таким образом, он остаётся независимым от конкретных классов компонентов, с
  * которыми работает.
  */
-function clientCode(component: Component) {
+function clientCode(component: IBaseInterface) {
     // ...
 
     console.log(`RESULT: ${component.operation()}`);
@@ -85,9 +85,9 @@ function clientCode(component: Component) {
 /**
  * Таким образом, клиентский код может поддерживать как простые компоненты...
  */
-const simple = new ConcreteComponent();
+const componentExample = new ComponentWithDefaultOperation();
 console.log('Client: I\'ve got a simple component:');
-clientCode(simple);
+clientCode(componentExample);
 console.log('');
 
 /**
@@ -96,7 +96,8 @@ console.log('');
  * Обратите внимание, что декораторы могут обёртывать не только простые
  * компоненты, но и другие декораторы.
  */
-const decorator1 = new ConcreteDecoratorA(simple);
-const decorator2 = new ConcreteDecoratorB(decorator1);
+const decorator1 = new DecoratorFirst(componentExample);
+const decorator2 = new DecoratorSecond(componentExample);
 console.log('Client: Now I\'ve got a decorated component:');
+clientCode(decorator1);
 clientCode(decorator2);
